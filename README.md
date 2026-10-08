@@ -1,32 +1,12 @@
-# JOULE SENSE 360°
-**Generative Spatial Memory & Agentic Vision for Accessibility**
+# AWS deployment plan — NOT YET DEPLOYED
+1. Obtain explicit approval and set an AWS Budget and cost alert.
+2. Confirm AWS CLI identity (`aws sts get-caller-identity`), region, IAM least-privilege, and data policy.
+3. Build and smoke-test container locally: `docker build -t joule:dev .`; `docker run -p 8080:8080 joule:dev`; `curl http://localhost:8080/health`.
+4. Create a private ECR repository and push the tested image.
+5. Create ECS task definition (Fargate ARM64 on a supported region, or EC2 Graviton) using the ECR image, with logs to CloudWatch.
+6. Keep initial service **private**; use an approved tunnel or restrict ingress/authentication before exposing an endpoint. The API as supplied has NO authentication, so do not expose it publicly.
+7. Run authorized synthetic test images through POST /analyze on the AWS task; record actual runtime and CloudWatch logs.
+8. Stop and remove resources after testing. Preserve cost and results evidence.
 
-Hackathon research prototype — **NOT a certified mobility or obstacle-avoidance device**. Never use outputs as the sole basis for navigation decisions.
-
-## Mission
-Demonstrate **OpenCV 5 + a meaningful AWS component**, active perception, personalized opt-in spatial memory, uncertainty reporting, and measurable edge/cloud efficiency. Future hardware: JOULE PIN; current priority: reproducible prototype.
-
-## Repo status (2026-10-08)
-Initial scaffolding only. No validated detection, distance estimation, mobile application, wearable hardware, AWS deployment, COOL benchmarks, or user trials are claimed.
-
-## Local setup
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -e '.[dev]'
-python -m pytest -q
-python -m joule.demo
-```
-Requires Python 3.11+; `opencv-python-headless==5.0.0.93` target from PyPI (confirm wheel for platform). The import checks the required major version.
-
-## Roadmap
-1. Implement reproducible OpenCV 5 image comparison and record uncertainty.
-2. Close the perception → decision → action → verification loop, with test traces.
-3. Add explicit opt-in spatial memory and delete/export controls.
-4. Implement calibrated distance estimates only with suitable depth information, no fabricated meters.
-5. AWS ECS/Graviton workload + S3 evidence + metrics, with secrets outside code.
-6. Compare memoryless / static memory / active memory, and performance/cost.
-7. Evaluate COOL on ARM if available, proving the actual workload.
-8. Accessible demo, technical report, short video, security and failure cases.
-
-Read [QWEN.md](QWEN.md), [docs/requirements.md](docs/requirements.md), and [docs/acceptance.md](docs/acceptance.md).
+AWS official guide: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_AWSCLI_Fargate.html
+NOTE: AWS has not been deployed here; cloud credit and resource prices must be checked first.
