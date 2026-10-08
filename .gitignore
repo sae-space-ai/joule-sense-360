@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+*.log
+.qwen/QWEN.local.md
+data/private/
+results/
+dist/
+*.egg-info/
